@@ -1,0 +1,55 @@
+stages:
+
+  preprocessing: 
+    cmd: python src/preprocessing.py --config=params.yaml
+    deps:
+    - src/preprocessing.py
+    params:
+    - preprocessing
+    outs:
+    - data/preprocessed/pre_cohort_1_pos.npy
+    - data/preprocessed/pre_cohort_1_neg.npy
+
+  feature_extraction:
+    cmd: python src/feature_extraction.py --config=params.yaml
+    deps:
+    - data/preprocessed/pre_cohort_1_pos.npy
+    - data/preprocessed/pre_cohort_1_neg.npy
+    - src/feature_extraction.py
+    params:
+    - preprocessing
+    - feature_extraction
+    - audio_&_feature
+    outs:
+    - data/features/covid_features.csv
+
+  data_split:
+    cmd: python src/data_split.py --config=params.yaml
+    deps:
+    - data/features/covid_features.csv
+    - 'src/data_split.py'
+    params:
+    - base
+    - data_split
+    - feature_extraction
+    outs:
+    - data/features/train.csv
+    - data/features/test.csv
+
+  train: 
+    cmd: python src/train_and_evaluate.py --config=params.yaml
+    deps:
+    - data/features/train.csv
+    - data/features/test.csv
+    - src/train_and_evaluate.py
+    params:
+    - base
+    - data_split
+    - train
+    - evaluate
+    - feature_extraction.target_column
+    outs:
+    - models/xgb_models.joblib
+    - reports/confusion_matrix.png
+    - reports/metrics.json
+  

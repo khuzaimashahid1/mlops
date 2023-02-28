@@ -1,0 +1,14 @@
+1. create a git repository 
+2. create an environment 
+3. setup python and install requirements.txt and dvc / mlflow
+4. create a folder
+5. place your code in that folder
+6. push your code to the main branch of the git repository  
+7. create a new branch 
+8. create a basic cookiecutter folder structure 
+9. create params.yaml
+10. write your parameters in params.yaml
+11. write all the pipeline stages and assign them parameters from params.yaml and test them one by one
+12. create dvc.yaml file and write end to end pipeline and test it with dvc repro command
+13. write mlflow model and metric logger and test it with mlflow ui
+14. all artifacts are tracked by dvc automatically and mlflow.db ad its artifacts need to be tracked with dvc as well

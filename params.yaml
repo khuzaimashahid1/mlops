@@ -1,0 +1,44 @@
+base:
+  random_state: 42
+
+audio_&_feature:
+  sampling_rate: 22050
+  axis: 0
+  n_mfcc: 13
+  n_mels: 13
+  fmax: 4000
+  n_chroma: 36
+
+preprocessing:
+  db_level: 25
+
+  raw_audio_pos: 'data/raw/cohort_1_pos.npy'
+  raw_audio_neg: 'data/raw/cohort_1_neg.npy'
+
+  processed_audio_pos: 'data/preprocessed/pre_cohort_1_pos.npy'
+  processed_audio_neg: 'data/preprocessed/pre_cohort_1_neg.npy'
+
+feature_extraction:
+  features_path: 'data/features/covid_features.csv'
+  target_column: status
+
+data_split:
+  test_size: 0.2
+  trainset_path: 'data/features/train.csv'
+  testset_path: 'data/features/test.csv'
+
+train:
+  model_path: 'models/xgb_models.joblib'
+
+evaluate:
+  reports_dir: reports
+  metrics_file: 'metrics.json'
+  confusion_matrix_image: 'confusion_matrix.png'
+  confusion_matrix_data: 'confusion_matrix_data.csv'
+
+mlflow_config:
+  artifacts_dir: artifacts
+  experiment_name: silent based cough segmentation
+  run_name: covid
+  registered_model_name: ExtraTressClassifier
+  remote_server_uri: http://0.0.0.0:1234

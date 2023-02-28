@@ -1,0 +1,152 @@
+schema: '2.0'
+stages:
+  preprocessing:
+    cmd: python src/preprocessing.py --config=params.yaml
+    deps:
+    - path: src/preprocessing.py
+      md5: 083b86b39d4d7a3fe2f081b0a9a511ba
+      size: 1864
+    params:
+      params.yaml:
+        preprocessing:
+          db_level: 25
+          raw_audio_pos: data/raw/cohort_1_pos.npy
+          raw_audio_neg: data/raw/cohort_1_neg.npy
+          processed_audio_pos: data/preprocessed/pre_cohort_1_pos.npy
+          processed_audio_neg: data/preprocessed/pre_cohort_1_neg.npy
+    outs:
+    - path: data/preprocessed/pre_cohort_1_neg.npy
+      md5: 2e427d69bc891c45e3e3c7d300f586d7
+      size: 336218528
+    - path: data/preprocessed/pre_cohort_1_pos.npy
+      md5: 53d885053c1a32426f9f14bba484f9cc
+      size: 169344128
+  feature_extraction:
+    cmd: python src/feature_extraction.py --config=params.yaml
+    deps:
+    - path: data/preprocessed/pre_cohort_1_neg.npy
+      md5: 2e427d69bc891c45e3e3c7d300f586d7
+      size: 336218528
+    - path: data/preprocessed/pre_cohort_1_pos.npy
+      md5: 53d885053c1a32426f9f14bba484f9cc
+      size: 169344128
+    - path: src/feature_extraction.py
+      md5: cb8499a3703b47e12de327ed4a955ba9
+      size: 4329
+    params:
+      params.yaml:
+        audio_&_feature:
+          sampling_rate: 22050
+          axis: 0
+          n_mfcc: 13
+          n_mels: 13
+          fmax: 4000
+          n_chroma: 36
+        feature_extraction:
+          features_path: data/features/covid_features.csv
+          target_column: status
+        preprocessing:
+          db_level: 25
+          raw_audio_pos: data/raw/cohort_1_pos.npy
+          raw_audio_neg: data/raw/cohort_1_neg.npy
+          processed_audio_pos: data/preprocessed/pre_cohort_1_pos.npy
+          processed_audio_neg: data/preprocessed/pre_cohort_1_neg.npy
+    outs:
+    - path: data/features/covid_features.csv
+      md5: 0250f35840a26ac0d89c196cbf27f3c8
+      size: 7926262
+  data_split:
+    cmd: python src/data_split.py --config=params.yaml
+    deps:
+    - path: data/features/covid_features.csv
+      md5: 0250f35840a26ac0d89c196cbf27f3c8
+      size: 7926262
+    - path: src/data_split.py
+      md5: fbd5e21768c9c6a8e4cbc3a9295977d1
+      size: 956
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+        data_split:
+          test_size: 0.2
+          trainset_path: data/features/train.csv
+          testset_path: data/features/test.csv
+        feature_extraction:
+          features_path: data/features/covid_features.csv
+          target_column: status
+    outs:
+    - path: data/features/test.csv
+      md5: 3626f3af6c87491270226e866fa6bc5c
+      size: 1583358
+    - path: data/features/train.csv
+      md5: daa0e12fdd837a4849b6561defa49e9d
+      size: 6318087
+  train:
+    cmd: python src/train_and_evaluate.py --config=params.yaml
+    deps:
+    - path: data/features/test.csv
+      md5: 3626f3af6c87491270226e866fa6bc5c
+      size: 1583358
+    - path: data/features/train.csv
+      md5: daa0e12fdd837a4849b6561defa49e9d
+      size: 6318087
+    - path: src/train_and_evaluate.py
+      md5: eeb1451e6f0aac1e187ac7c0d46251f2
+      size: 3479
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+        data_split:
+          test_size: 0.2
+          trainset_path: data/features/train.csv
+          testset_path: data/features/test.csv
+        evaluate:
+          reports_dir: reports
+          metrics_file: metrics.json
+          confusion_matrix_image: confusion_matrix.png
+          confusion_matrix_data: confusion_matrix_data.csv
+        feature_extraction.target_column: status
+        train:
+          model_path: models/xgb_models.joblib
+    outs:
+    - path: models/xgb_models.joblib
+      md5: d69190c8ef09fd1e362859d52be06920
+      size: 9430544
+    - path: reports/confusion_matrix.png
+      md5: ce2e4b0689305ea242f8b3e97826fcac
+      size: 24694
+    - path: reports/metrics.json
+      md5: b7034a61d18046244342ef969e3e7f48
+      size: 32
+  evaluate:
+    cmd: python src/evaluate_and_visualize.py --config=params.yaml
+    deps:
+    - path: data/features/test.csv
+      md5: b0586fb535130d306222da001c161ece
+      size: 2292986
+    - path: models/xgb_models.joblib
+      md5: 9a432820908ae93916acb6935f73d153
+      size: 176548
+    - path: src/evaluate_and_visualize.py
+      md5: ff6b6ff6c32f6a1bdda68acab8ec936b
+      size: 2720
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+        data_split.testset_path: data/features/test.csv
+        evaluate:
+          reports_dir: reports
+          metrics_file: metrics.json
+          confusion_matrix_image: confusion_matrix.png
+          confusion_matrix_data: confusion_matrix_data.csv
+        feature_extraction.target_column: status
+    outs:
+    - path: reports/confusion_matrix.png
+      md5: 0de05936e0445de47e11183fbea092ab
+      size: 24732
+    - path: reports/metrics.json
+      md5: 66c447a5640a2411fd5aa38454cc0f05
+      size: 32

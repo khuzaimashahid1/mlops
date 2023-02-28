@@ -15,7 +15,7 @@ import mlflow
 from sklearn.metrics import accuracy_score, matthews_corrcoef
 from urllib.parse import urlparse
 
-sys.path.append('/home/bigpenguin/projects/dvc/')
+# sys.path.append('/home/bigpenguin/projects/dvc/')
 
 def train_model(config_path: Text) -> None:
 

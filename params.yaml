@@ -41,4 +41,4 @@ mlflow_config:
   experiment_name: silent based cough segmentation
   run_name: covid
   registered_model_name: ExtraTressClassifier
-  remote_server_uri: http://0.0.0.0:1234
+  remote_server_uri: sqlite:///mlflow.db

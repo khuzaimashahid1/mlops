@@ -106,3 +106,7 @@ dmypy.json
 /.idea
 /.vscode
 New Text Document.txt
+/artifacts
+/mlruns
+/logs
+/mlflow.db

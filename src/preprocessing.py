@@ -16,7 +16,7 @@ def segmenter(input_dir,sr,db_level):
         try:
             if len(aud)/sr>1.0:
                 splits=librosa.effects.split(aud,top_db=db_level)
-                print(splits)
+                # print(splits)
                 for sp in splits:
                     pads=sp[1]-sp[0]
                     if pads<44100:

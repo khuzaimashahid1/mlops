@@ -4,8 +4,8 @@ base:
 audio_&_feature:
   sampling_rate: 22050
   axis: 0
-  n_mfcc: 13
-  n_mels: 13
+  n_mfcc: 20
+  n_mels: 20
   fmax: 4000
   n_chroma: 36
 

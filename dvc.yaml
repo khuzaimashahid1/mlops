@@ -3,6 +3,7 @@ stages:
   preprocessing: 
     cmd: python src/preprocessing.py --config=params.yaml
     deps:
+    - data/raw/
     - src/preprocessing.py
     params:
     - preprocessing

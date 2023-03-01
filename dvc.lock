@@ -3,6 +3,10 @@ stages:
   preprocessing:
     cmd: python src/preprocessing.py --config=params.yaml
     deps:
+    - path: data/raw/
+      md5: ceb7624506365598457b843ad1d9b8d6.dir
+      size: 6511046
+      nfiles: 2
     - path: src/preprocessing.py
       md5: 6192fc0df335bd668ca7b57a32c6a5ec
       size: 1866
@@ -16,20 +20,20 @@ stages:
           processed_audio_neg: data/preprocessed/pre_cohort_1_neg.npy
     outs:
     - path: data/preprocessed/pre_cohort_1_neg.npy
-      md5: 2e427d69bc891c45e3e3c7d300f586d7
-      size: 336218528
+      md5: cf00ca448dd5fff91e7b28795093d0e5
+      size: 6703328
     - path: data/preprocessed/pre_cohort_1_pos.npy
-      md5: 53d885053c1a32426f9f14bba484f9cc
-      size: 169344128
+      md5: 2e3192871c80c49131d5bd182c1d03c0
+      size: 18345728
   feature_extraction:
     cmd: python src/feature_extraction.py --config=params.yaml
     deps:
     - path: data/preprocessed/pre_cohort_1_neg.npy
-      md5: 2e427d69bc891c45e3e3c7d300f586d7
-      size: 336218528
+      md5: cf00ca448dd5fff91e7b28795093d0e5
+      size: 6703328
     - path: data/preprocessed/pre_cohort_1_pos.npy
-      md5: 53d885053c1a32426f9f14bba484f9cc
-      size: 169344128
+      md5: 2e3192871c80c49131d5bd182c1d03c0
+      size: 18345728
     - path: src/feature_extraction.py
       md5: cb8499a3703b47e12de327ed4a955ba9
       size: 4329
@@ -53,14 +57,14 @@ stages:
           processed_audio_neg: data/preprocessed/pre_cohort_1_neg.npy
     outs:
     - path: data/features/covid_features.csv
-      md5: c9704899007e15dbdb543ab4792ec8d4
-      size: 4859439
+      md5: e72ea953a49ed20f5e4b99c1efe2f036
+      size: 240432
   data_split:
     cmd: python src/data_split.py --config=params.yaml
     deps:
     - path: data/features/covid_features.csv
-      md5: c9704899007e15dbdb543ab4792ec8d4
-      size: 4859439
+      md5: e72ea953a49ed20f5e4b99c1efe2f036
+      size: 240432
     - path: src/data_split.py
       md5: fbd5e21768c9c6a8e4cbc3a9295977d1
       size: 956
@@ -77,20 +81,20 @@ stages:
           target_column: status
     outs:
     - path: data/features/test.csv
-      md5: f9968d3b358eb99f2f6b2611e3711a39
-      size: 970683
+      md5: e7fd54d231d458d82c01f0a466fdd22b
+      size: 49988
     - path: data/features/train.csv
-      md5: 8b05782bb65b9542fa119237db4b6207
-      size: 3870139
+      md5: 4d8b524014eee0da58e9e07e1cd8d284
+      size: 191358
   train:
     cmd: python src/train_and_evaluate.py --config=params.yaml
     deps:
     - path: data/features/test.csv
-      md5: f9968d3b358eb99f2f6b2611e3711a39
-      size: 970683
+      md5: e7fd54d231d458d82c01f0a466fdd22b
+      size: 49988
     - path: data/features/train.csv
-      md5: 8b05782bb65b9542fa119237db4b6207
-      size: 3870139
+      md5: 4d8b524014eee0da58e9e07e1cd8d284
+      size: 191358
     - path: src/train_and_evaluate.py
       md5: a5e44347cad2a954462081f059860df1
       size: 3481
@@ -112,13 +116,13 @@ stages:
           model_path: models/xgb_models.joblib
     outs:
     - path: models/xgb_models.joblib
-      md5: 8307575b634dcac9d1e9566c34d0087c
-      size: 9422576
+      md5: 245057a7c95cb67810475123437d6c79
+      size: 493700
     - path: reports/confusion_matrix.png
-      md5: 31c77ff32a6700a802c7aae2bc83029c
-      size: 24457
+      md5: 6b0bc2a0425ffd6a57eaa0c9056155d9
+      size: 24009
     - path: reports/metrics.json
-      md5: 0f888815dc1eea14dd334f50fde85791
+      md5: c5f480be949c8af2b5693feaaeb08b78
       size: 32
   evaluate:
     cmd: python src/evaluate_and_visualize.py --config=params.yaml

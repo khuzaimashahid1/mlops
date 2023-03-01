@@ -110,3 +110,5 @@ New Text Document.txt
 /mlruns
 /logs
 /mlflow.db
+/tmp
+/data/raw

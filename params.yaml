@@ -10,7 +10,7 @@ audio_&_feature:
   n_chroma: 36
 
 preprocessing:
-  db_level: 25
+  db_level: 30
 
   raw_audio_pos: 'data/raw/cohort_1_pos.npy'
   raw_audio_neg: 'data/raw/cohort_1_neg.npy'
